@@ -3,10 +3,9 @@ import { Context } from "../../../model/shared/context";
 function rewardBasePerClick(context: Context): number {
     const byUpgrade = context.ingame.currentUpgrades.reduce((accumulator, currentUpgrade) => {
         let currentUpgradeRewardBasePerClick = 0;
-        // step 0はかならずあるように実装するので大丈夫らしいよ
-        let currentPower = currentUpgrade.upgrade.stat[0].clickReward.base;
-        for (let index = 0; index < currentUpgrade.upgradeStepCount; index++) {
-            currentPower = currentUpgrade.upgrade.stat[index]?.clickReward.base ?? currentPower;
+        let currentPower = 0;
+        for (let index = 1; index <= currentUpgrade.upgradeStepCount; index++) {
+            currentPower = currentUpgrade.upgrade.stat[index]?.clickReward?.base ?? currentPower;
             currentUpgradeRewardBasePerClick += currentPower;
         }
 
@@ -14,7 +13,7 @@ function rewardBasePerClick(context: Context): number {
     }, 0);
 
     const byItem = context.ingame.currentItems.reduce((accumulator, currentItem) => {
-        return accumulator + currentItem.stat.clickReward.base;
+        return accumulator + (currentItem.stat.clickReward?.base ?? 0);
     }, 0)
 
     return 1 + byUpgrade + byItem;
@@ -23,10 +22,9 @@ function rewardBasePerClick(context: Context): number {
 function rewardMultiplierPerClick(context: Context): number {
     const byUpgrade = context.ingame.currentUpgrades.reduce((accumulator, currentUpgrade) => {
         let currentUpgradeRewardMultiplierPerClick = 0;
-        // step 0はかならずあるように実装するので大丈夫らしいよ
-        let currentPower = currentUpgrade.upgrade.stat[0].clickReward.multiplier;
-        for (let index = 0; index < currentUpgrade.upgradeStepCount; index++) {
-            currentPower = currentUpgrade.upgrade.stat[index]?.clickReward.multiplier ?? currentPower;
+        let currentPower = 0;
+        for (let index = 1; index <= currentUpgrade.upgradeStepCount; index++) {
+            currentPower = currentUpgrade.upgrade.stat[index]?.clickReward?.multiplier ?? currentPower;
             currentUpgradeRewardMultiplierPerClick += currentPower;
         }
 
@@ -34,7 +32,7 @@ function rewardMultiplierPerClick(context: Context): number {
     }, 0);
 
     const byItem = context.ingame.currentItems.reduce((accumulator, currentItem) => {
-        return accumulator + currentItem.stat.clickReward.multiplier;
+        return accumulator + (currentItem.stat.clickReward?.multiplier ?? 0);
     }, 0)
 
     return 1 + byUpgrade + byItem;

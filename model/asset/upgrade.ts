@@ -1,4 +1,5 @@
 import { Context } from "../shared/context";
+import { Formula } from "../shared/formula";
 
 export interface Upgrade {
     id: string
@@ -7,20 +8,17 @@ export interface Upgrade {
     required: (context: Context) => boolean
     stat: {
         [stepCount: number]: {
-            clickReward: {
-                base: number
-                multiplier: number // 何から得られたかは関係なく、基礎ステータスに対してのレートに加算される
+            clickReward?: {
+                base?: number
+                multiplier?: number // 何から得られたかは関係なく、基礎ステータスに対してのレートに加算される
             }
-            idleReward: {
-                base: number
-                multiplier: number
+            idleReward?: {
+                base?: number
+                multiplier?: number
             }
         }
     }
     cost: {
-        [stepCount: number]: {
-            base: number
-            multiplier: number // 何から得られたかは関係なく、基礎ステータスに対してのレートに加算される
-        }
+        [stepCount: number]: number | Formula
     }
 }

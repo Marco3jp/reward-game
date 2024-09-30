@@ -13,17 +13,17 @@ export class Ingame implements IngameInterface {
         this.currentItems = [];
     }
 
-    addUpgrade(upgrade: Upgrade) {
-        this.currentUpgrades.push({ upgrade: upgrade, upgradeStepCount: 1 });
-    }
-
-    stepUpgrade(upgrade: Upgrade, step: number = 1) {
+    addUpgrade(upgrade: Upgrade, step: number = 1) {
         const currentUpgrade = this.currentUpgrades.find(
             currentUpgrade => currentUpgrade.upgrade === upgrade
         );
+
         if (currentUpgrade) {
             currentUpgrade.upgradeStepCount += step;
+            return;
         }
+
+        this.currentUpgrades.push({ upgrade: upgrade, upgradeStepCount: 1 });
     }
 
     addItems(item: Item) {

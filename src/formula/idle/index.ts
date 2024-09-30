@@ -3,10 +3,9 @@ import { Context } from "../../../model/shared/context";
 function rewardBasePerIdle(context: Context): number {
     const byUpgrade = context.ingame.currentUpgrades.reduce((accumulator, currentUpgrade) => {
         let currentUpgradeRewardBasePerIdle = 0;
-        // step 0はかならずあるように実装するので大丈夫らしいよ
-        let currentPower = currentUpgrade.upgrade.stat[0].idleReward.base;
-        for (let index = 0; index < currentUpgrade.upgradeStepCount; index++) {
-            currentPower = currentUpgrade.upgrade.stat[index]?.idleReward.base ?? currentPower;
+        let currentPower = 0;
+        for (let index = 1; index <= currentUpgrade.upgradeStepCount; index++) {
+            currentPower = currentUpgrade.upgrade.stat[index]?.idleReward?.base ?? currentPower;
             currentUpgradeRewardBasePerIdle += currentPower;
         }
 
@@ -14,19 +13,18 @@ function rewardBasePerIdle(context: Context): number {
     }, 0);
 
     const byItem = context.ingame.currentItems.reduce((accumulator, currentItem) => {
-        return accumulator + currentItem.stat.idleReward.base;
+        return accumulator + (currentItem.stat.idleReward?.base ?? 0);
     }, 0)
 
-    return 1 + byUpgrade + byItem;
+    return byUpgrade + byItem;
 }
 
 function rewardMultiplierPerIdle(context: Context): number {
     const byUpgrade = context.ingame.currentUpgrades.reduce((accumulator, currentUpgrade) => {
         let currentUpgradeRewardMultiplierPerIdle = 0;
-        // step 0はかならずあるように実装するので大丈夫らしいよ
-        let currentPower = currentUpgrade.upgrade.stat[0].idleReward.multiplier;
-        for (let index = 0; index < currentUpgrade.upgradeStepCount; index++) {
-            currentPower = currentUpgrade.upgrade.stat[index]?.idleReward.multiplier ?? currentPower;
+        let currentPower = 0;
+        for (let index = 1; index <= currentUpgrade.upgradeStepCount; index++) {
+            currentPower = currentUpgrade.upgrade.stat[index]?.idleReward?.multiplier ?? currentPower;
             currentUpgradeRewardMultiplierPerIdle += currentPower;
         }
 
@@ -34,10 +32,10 @@ function rewardMultiplierPerIdle(context: Context): number {
     }, 0);
 
     const byItem = context.ingame.currentItems.reduce((accumulator, currentItem) => {
-        return accumulator + currentItem.stat.idleReward.multiplier;
+        return accumulator + (currentItem.stat.idleReward?.multiplier ?? 0);
     }, 0)
 
-    return byUpgrade + byItem;
+    return 1 + byUpgrade + byItem;
 }
 
 function standardRewardPerIdle(context: Context): number {

@@ -1,10 +1,4 @@
-// これパフォーマンスがわからん
-// 場合によっては事前計算をしないといけないかもね～になってる
-// overwitesがN個あると、0からある値までの計算、ある値からある値まで、をN回やることになるんでまあ確かにめんどい
-// パソコンさんが頑張ってくれるかなあ
-
-import { Context } from "./shared/context";
-import { Formula } from "./shared/formula";
+import { Context } from "../shared/context";
 
 export interface Upgrade {
     id: string
@@ -12,21 +6,21 @@ export interface Upgrade {
     // 購入に必要な価格以外に必要な条件とか判定するやつ
     required: (context: Context) => boolean
     stat: {
-        base: {
-            clickReward: number
-            idleReward: number
-        },
-        step: {
-            [level: number]: {
-                clickReward: number | Formula
-                idleReward: number | Formula
+        [stepCount: number]: {
+            clickReward: {
+                base: number
+                multiplier: number // 何から得られたかは関係なく、基礎ステータスに対してのレートに加算される
+            }
+            idleReward: {
+                base: number
+                multiplier: number
             }
         }
     }
     cost: {
-        buy: number,
-        step: {
-            [level: number]: number | Formula
+        [stepCount: number]: {
+            base: number
+            multiplier: number // 何から得られたかは関係なく、基礎ステータスに対してのレートに加算される
         }
     }
 }
